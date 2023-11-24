@@ -22,7 +22,14 @@ import {
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
+import {MatSidenavModule} from '@angular/material/sidenav';
 
+import {MatListModule} from '@angular/material/list';
+import { TransactionsComponent } from './transactions/transactions.component';
+import { MonthByMonthComponent } from './month-by-month/month-by-month.component';
+import { SpendingByMonthComponent } from './spending-by-month/spending-by-month.component';
+import { ChartModule } from 'primeng/chart';
+import { TableModule } from 'primeng/table';
 
 @NgModule({
   declarations: [
@@ -32,7 +39,10 @@ import { HttpClientModule } from '@angular/common/http';
     SignupComponent,
     DashboardComponent,
     LogoutComponent,
-    HomepageComponent
+    HomepageComponent,
+    TransactionsComponent,
+    MonthByMonthComponent,
+    SpendingByMonthComponent
   ],
   imports: [
     BrowserModule,
@@ -44,7 +54,11 @@ import { HttpClientModule } from '@angular/common/http';
     BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        MatSidenavModule,
+        MatListModule,
+        ChartModule,
+        TableModule
   ],
   providers: [],
   bootstrap: [AppComponent]

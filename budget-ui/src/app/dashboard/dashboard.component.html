@@ -1,1 +1,12 @@
-<p>dashboard works!</p>
+<mat-drawer-container class="example-container">
+  <mat-drawer mode="side" opened>
+    <mat-nav-list>
+        <a mat-list-item routerLink="transactions" [activated]="true">Transactions</a>
+        <a mat-list-item routerLink="spending-by-month" [activated]="false">Spending By Month</a>
+        <a mat-list-item routerLink="month-by-month" [activated]="false">Month By Month</a>
+    </mat-nav-list>
+  </mat-drawer>
+  <mat-drawer-content>
+    <router-outlet ></router-outlet>
+  </mat-drawer-content>
+</mat-drawer-container>

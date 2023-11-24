@@ -17,3 +17,10 @@ export interface LoginRequest {
   username: String;
   password: String;
 }
+
+export interface Transaction {
+  title: String;
+  amount: BigInt;
+  categoryId: String,
+  createdDate: String
+}

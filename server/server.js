@@ -161,9 +161,7 @@ app.post('/api/category', jwtMW,(req, res) =>{
         return
     }
     
-    connection.connect();
-    connection.query('Insert INTO budget_category (name, limit, userId) VALUES ( ?, ?, ?, ? , ?, ?)',[name, limit, req.auth.id], function (error, results, fields) {
-       connection.end();
+    connection.query('Insert INTO budget_category (name, limit, userId) VALUES ( ?, ?, ?)',[name, limit, req.auth.id], function (error, results, fields) {
         if (error)  {
             console.log("budget creation failed" + error.message)
             if (error.code == "ER_DUP_ENTRY") {
@@ -180,31 +178,32 @@ app.post('/api/category', jwtMW,(req, res) =>{
     });
 });
 
-app.post('/api/budget', jwtMW,(req, res) =>{
+app.post('/api/transaction', jwtMW,(req, res) =>{
     const  title= req.body.title;
-    const  budget = req.body.budget;
-    const  month = req.body.month;
-    const  year = req.body.year;
+    const  amount = req.body.amount;
+    const  createdDate = req.body.createdDate;
     const  categoryId = req.body.categoryId;
 
-    if (!title || !budget || !month || !year) {
+    if (!title || !amount) {
         res.status(400).send("all fields are required")
         return
     }
-    connection.connect();
-    connection.query('Insert INTO budget (title, amount, userId, month, year, categoryId) VALUES ( ?, ?, ?, ? , ?, ?)',[title, budget, req.auth.id, month, year, categoryId], function (error, results, fields) {
-       connection.end();
+    connection.query('Insert INTO budget (title, amount, userId, createdDate, categoryId) VALUES ( ?, ?, ?, ? , ?)',[title, amount, req.auth.id, createdDate, categoryId], function (error, results, fields) {
+
         if (error)  {
             console.log("budget creation failed" + error.message)
             if (error.code == "ER_DUP_ENTRY") {
-                res.status(400).send("username already exists")
+                res.status(400).send("Budget already exists")
             } else {
                 res.status(400).send("Something went wrong")
             }
             
         } else  {
             console.log("user is created")
-            res.status(200).send("Budget successfully created")
+            res.status(200).send({
+                success: true,
+                message : "Budget successfully created"
+            })
         }
        
     });
@@ -212,10 +211,9 @@ app.post('/api/budget', jwtMW,(req, res) =>{
 
 
 
-app.get('/api/budgets', jwtMW,(req,res) => {
-    console.log(req.auth)
+app.get('/api/transactions', jwtMW,(req,res) => {
     let userId = req.auth.id
-    connection.query('SELECT * FROM budget_spending where userId = ? and month = ? and year = ?',[userId, req.query.month, req.query.year], function (error, results, fields) {
+    connection.query('SELECT * FROM budget_spending where userId = ? AND  createdDate >= ? and createdDate <= ?',[userId, req.query.startDate, req.query.endDate], function (error, results, fields) {
         if (error)  {
             console.log(error)
             res.status(500).json({
@@ -224,12 +222,39 @@ app.get('/api/budgets', jwtMW,(req,res) => {
             });
         } else {
             res.json({
-                myMonthlyBudget: results
+                transactions: results
             });
         }
     });  
 });  
 
+app.get('/api/spendingByMonth', jwtMW,(req,res) => {
+    let userId = req.auth.id
+    connection.query('SELECT * FROM budget_spending where userId = ? AND  MONTH(createdDate) = ? and YEAR(createdDate) = ?',[userId, req.query.month, req.query.year], function (error, results, fields) {
+        if (error)  {
+            console.log(error)
+            res.status(500).json({
+                success: false,
+                err: 'Internal Server Error'
+            });
+        } else {
+            const groupByCat = []
+            for (const [key, value] of Object.entries(groupBy(results, categoryId))) {
+                groupBy.push({categoryId: key, amount: value.reduce((ac, cv) =>  ac + cv.amount, 0)})
+              }
+            res.json({
+                 spendingByCategory: groupByCat
+            });
+        }
+    });  
+});  
+
+var groupBy = function(xs, key) {
+  return xs.reduce(function(rv, x) {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
+};
 
 app.listen(PORT, () => {
     console.log(`Serving on port ${PORT}`);
