@@ -1,0 +1,48 @@
+ {
+            "uuid": "e3da8b7f-e8d2-48af-9bc5-ea864da97cbb",
+            "envelope_id": null,
+            "account_id": "15489218",
+            "trans_type": "INC",
+            "name": null,
+            "envelope_type": null,
+            "envelope_visible": null,
+            "receiver": "Income",
+            "account_name": "My Account",
+            "account_visible": "1",
+            "check_num": "",
+            "description": "",
+            "amount": "-23.00",
+            "created": "2023-11-19 14:09:04",
+            "status": "",
+            "remembered_set_id": null,
+            "schedule": null,
+            "reminder": null,
+            "last_run_date": null,
+            "schedule_next_date": null,
+            "parentUuid": null,
+            "parentTransType": null,
+            "parentEnvelopeName": null,
+            "parentAccountName": null,
+            "parentEnvelopeVisible": null,
+            "parentAccountVisible": null,
+            "siblingEnvelopeName": null,
+            "siblingAccountName": null,
+            "siblingEnvelopeVisible": null,
+            "siblingAccountVisible": null,
+            "runningBalance": "",
+            "display_amount": "<strong class=\"green\">+23.00<\/strong>",
+            "display_icon": "Income",
+            "details": "Groceries <strong>&bull;<\/strong> My Account ",
+            "is_fill_transaction": true,
+            "is_manual_transaction": true,
+            "selected": false,
+            "pending_txn": null
+
+
+
+            [
+                {"Uuid":"90537f06-c99f-4d30-b547-2652ace21a42","FullName":"Groceries","Amount":"70.00","PeriodExtra":"1","Period":"MON","EnvelopeType":"ENV_REG"},
+                {"Uuid":"e22f1ea4-57f8-484c-ae41-0acda22d7943","FullName":"Gas","Amount":"60.00","PeriodExtra":"1","Period":"MON","EnvelopeType":"ENV_REG"},
+                {"Uuid":"e7339407-b679-4a2e-bcbe-9013e58ba887","FullName":"Bill","Amount":"100.00","PeriodExtra":"1","Period":"MON","EnvelopeType":"ENV_REG"},
+                {"Uuid":"56382a39-b06b-4245-a003-73d60f2f6e6f","FullName":"Shoppings","Amount":"100.00","PeriodExtra":"1","Period":"MON","EnvelopeType":"ENV_REG"}]
+ENV_IRR: [{"Uuid":"f4dea77a-f5c6-4189-9613-3f8c30f1416d","FullName":"Savings","Amount":"100.00","EnvelopeType":"ENV_IRR","Period":"E2M","PeriodExtra":"11-19"}]

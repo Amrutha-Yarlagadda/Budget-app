@@ -6,9 +6,12 @@ const mysql = require('mysql');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const exjwt = require('express-jwt'); 
+const { title } = require('process');
+var cors = require('cors')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors())
 
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -22,7 +25,7 @@ var connection = mysql.createConnection({
     password : 'password',
     database: 'budget_app',
 });
-
+connection.connect();
 const PORT = 3000;
 
 const secretKey = "My super secret key";
@@ -41,23 +44,30 @@ app.post('/api/signup', (req, res) =>{
     }
     const pwd = encryptPassword(password);
     const date = transformDate(new Date());
-    connection.connect();
+   
     connection.query('Insert INTO users (username, passwordHash, registeredAt) VALUES ( ?, ?, ?)',[username, pwd, date], function (error, results, fields) {
-       connection.end();
+       
         if (error)  {
             console.log("user creation failed" + error.message)
             if (error.code == "ER_DUP_ENTRY") {
-                res.status(400).send("username already exists")
+                res.status(409).send({
+                    success: false,
+                    message : "User name already exists"
+                })
             } else {
                 res.status(400).send("Something went wrong")
             }
             
         } else  {
             console.log("user is created")
-            res.status(200).send("user successfully created")
+            res.status(200).send({
+                success: true,
+                message : "User successfully created"
+            })
         }
-       
+        //connection.end();
     });
+  
 });
 
 
@@ -73,16 +83,18 @@ app.post('/api/login', (req, res) => {
         } else if (results.length == 0) {
             res.status(401).json({
                 success: false,
-                err: 'Username or password is incorrect'
+                message: 'Username or password is incorrect'
             });
         } else {
             let user = results[0]
-            let token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '3m' });
+            let token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '30m' });
             console.log(token)
             res.json({
                 success: true,
-                err: null,
-                token
+                message: "Login Successful",
+                body: {
+                    token: token
+                }
             });
         }    
 })
@@ -120,6 +132,104 @@ app.use(function (err,req, res, next) {
         next(err);
     }
 });
+
+
+app.get('/api/category', jwtMW,(req,res) => {
+    console.log(req.auth)
+    let userId = req.auth.id
+    connection.query('SELECT * FROM budget_category where userId = ?', [userId], function (error, results, fields) {
+        if (error)  {
+            console.log(error)
+            res.status(500).json({
+                success: false,
+                err: 'Internal Server Error'
+            });
+        } else {
+            res.json({
+                myMonthlyBudget: results
+            });
+        }
+    });  
+}); 
+
+app.post('/api/category', jwtMW,(req, res) =>{
+    const  name= req.body.name;
+    const  limit = req.body.limit;
+
+    if (!name || !limit) {
+        res.status(400).send("all fields are required")
+        return
+    }
+    
+    connection.connect();
+    connection.query('Insert INTO budget_category (name, limit, userId) VALUES ( ?, ?, ?, ? , ?, ?)',[name, limit, req.auth.id], function (error, results, fields) {
+       connection.end();
+        if (error)  {
+            console.log("budget creation failed" + error.message)
+            if (error.code == "ER_DUP_ENTRY") {
+                res.status(400).send("username already exists")
+            } else {
+                res.status(400).send("Something went wrong")
+            }
+            
+        } else  {
+            console.log("user is created")
+            res.status(200).send("Budget successfully created")
+        }
+       
+    });
+});
+
+app.post('/api/budget', jwtMW,(req, res) =>{
+    const  title= req.body.title;
+    const  budget = req.body.budget;
+    const  month = req.body.month;
+    const  year = req.body.year;
+    const  categoryId = req.body.categoryId;
+
+    if (!title || !budget || !month || !year) {
+        res.status(400).send("all fields are required")
+        return
+    }
+    connection.connect();
+    connection.query('Insert INTO budget (title, amount, userId, month, year, categoryId) VALUES ( ?, ?, ?, ? , ?, ?)',[title, budget, req.auth.id, month, year, categoryId], function (error, results, fields) {
+       connection.end();
+        if (error)  {
+            console.log("budget creation failed" + error.message)
+            if (error.code == "ER_DUP_ENTRY") {
+                res.status(400).send("username already exists")
+            } else {
+                res.status(400).send("Something went wrong")
+            }
+            
+        } else  {
+            console.log("user is created")
+            res.status(200).send("Budget successfully created")
+        }
+       
+    });
+});
+
+
+
+app.get('/api/budgets', jwtMW,(req,res) => {
+    console.log(req.auth)
+    let userId = req.auth.id
+    connection.query('SELECT * FROM budget_spending where userId = ? and month = ? and year = ?',[userId, req.query.month, req.query.year], function (error, results, fields) {
+        if (error)  {
+            console.log(error)
+            res.status(500).json({
+                success: false,
+                err: 'Internal Server Error'
+            });
+        } else {
+            res.json({
+                myMonthlyBudget: results
+            });
+        }
+    });  
+});  
+
 
 app.listen(PORT, () => {
     console.log(`Serving on port ${PORT}`);

@@ -1,0 +1,31 @@
+{
+    "myMonthlyBudget": [
+    {
+        "title": "Power Bill",
+        "budget": 160
+    },
+    {
+        "title": "Rent",
+        "budget": 350
+    },
+    {
+        "title": "Groceries",
+        "budget": 90
+    },
+    {
+        "title": "Gas",
+        "budget": 30
+    },
+    {
+        "title": "Restaurants",
+        "budget": 80
+    },
+    {
+        "title": "Cable",
+        "budget": 90
+    },    {
+        "title": "Mobile & Internet Bill",
+        "budget": 70
+    }
+ ]
+}
