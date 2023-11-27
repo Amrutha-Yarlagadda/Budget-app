@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
 
-
+@import "primeng/resources/themes/lara-light-blue/theme.css";
+@import "primeng/resources/primeng.css";
+@import "primeicons/primeicons.css";
 * {
   box-sizing: border-box;
 }
@@ -13,4 +15,23 @@ body {
 
 html, body {
   height: 100%;
+}
+.end-setting {
+  padding: 0.5rem;
+  background: #f8f9fa;
+  color: #495057;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+}
+
+
+.mat-mdc-button .mat-mdc-button-touch-target, .mat-mdc-unelevated-button .mat-mdc-button-touch-target, .mat-mdc-raised-button .mat-mdc-button-touch-target, .mat-mdc-outlined-button .mat-mdc-button-touch-target {
+  background-color: #44d5ad;
+}
+
+.cdk-overlay-container {
+  position: fixed;
+  z-index: 10000;
 }

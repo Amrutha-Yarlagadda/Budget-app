@@ -8,6 +8,8 @@ import { LogoutComponent } from './logout/logout.component';
 import { TransactionsComponent } from './transactions/transactions.component';
 import { MonthByMonthComponent } from './month-by-month/month-by-month.component';
 import { SpendingByMonthComponent } from './spending-by-month/spending-by-month.component';
+import { SpendingVsBudgetComponent } from './spending-vs-budget/spending-vs-budget.component';
+import { ConfigureBudgetComponent } from './configurebudget/configurebudget.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -16,7 +18,9 @@ const routes: Routes = [
   { path: 'logout', component: LogoutComponent },
   { path: 'dashboard', component: DashboardComponent,
     children : [
-    { path: '', redirectTo: 'transactions', pathMatch: 'full' },
+    { path: '', redirectTo: 'configure-budget', pathMatch: 'full' },
+    { path: 'configure-budget', component: ConfigureBudgetComponent},
+    { path: 'spending-vs-budget', component: SpendingVsBudgetComponent},
     { path: 'transactions', component: TransactionsComponent},
     { path: 'month-by-month', component: MonthByMonthComponent },
     { path: 'spending-by-month', component: SpendingByMonthComponent}

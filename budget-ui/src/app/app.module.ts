@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { ErrorHandler, NgModule, } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -30,7 +30,19 @@ import { MonthByMonthComponent } from './month-by-month/month-by-month.component
 import { SpendingByMonthComponent } from './spending-by-month/spending-by-month.component';
 import { ChartModule } from 'primeng/chart';
 import { TableModule } from 'primeng/table';
-
+import { ErrorHandlerService } from './error-handler.service';
+import { MenubarModule } from 'primeng/menubar';
+import { ArticleComponent } from './article/article.component';
+import { AddTransactionComponent } from './add-transaction/add-transaction.component';
+import { DynamicDialogModule } from 'primeng/dynamicdialog';
+import { ButtonModule } from 'primeng/button';
+import {VERSION as MAT_VERSION, MatNativeDateModule} from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { MatSelectModule } from '@angular/material/select';
+import { AddCategoryComponent } from './add-category/add-category.component';
+import { SpendingVsBudgetComponent } from './spending-vs-budget/spending-vs-budget.component';
+import { ConfigureBudgetComponent } from './configurebudget/configurebudget.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +54,12 @@ import { TableModule } from 'primeng/table';
     HomepageComponent,
     TransactionsComponent,
     MonthByMonthComponent,
-    SpendingByMonthComponent
+    SpendingByMonthComponent,
+    ArticleComponent,
+    AddTransactionComponent,
+    AddCategoryComponent,
+    SpendingVsBudgetComponent,
+    ConfigureBudgetComponent
   ],
   imports: [
     BrowserModule,
@@ -52,15 +69,27 @@ import { TableModule } from 'primeng/table';
     MatInputModule,
     MatButtonModule,
     BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        NoopAnimationsModule,
-        MatSidenavModule,
-        MatListModule,
-        ChartModule,
-        TableModule
+    FormsModule,
+    ReactiveFormsModule,
+    NoopAnimationsModule,
+    MatSidenavModule,
+    MatListModule,
+    ChartModule,
+    TableModule,
+    MenubarModule,
+    DynamicDialogModule,
+    ButtonModule,
+    MatNativeDateModule,
+    MatDatepickerModule,
+    MatSelectModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: ErrorHandler,
+      useClass: ErrorHandlerService,
+    },
+    DialogService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

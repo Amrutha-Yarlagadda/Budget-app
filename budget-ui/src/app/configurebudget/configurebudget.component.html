@@ -1,0 +1,52 @@
+
+<div><p-button  class="modal-button" (click)="addCategory()" icon="pi pi-info-circle" label="Add New Category"></p-button>
+<div *ngIf="categories.length != 0" class="card">
+  <p-table [value]="categories" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
+      <ng-template pTemplate="header">
+          <tr>
+              <th style="width:20%">Id</th>
+              <th style="width:20%">Name</th>
+              <th style="width:20%">Limit</th>
+              <th style="width:20%"></th>
+          </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-category let-editing="editing" let-ri="rowIndex">
+          <tr [pEditableRow]="category">
+              <td>
+                  {{category.id}}
+              </td>
+              <td>
+                  <p-cellEditor>
+                      <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="category.name" required>
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                          {{category.name}}
+                      </ng-template>
+                  </p-cellEditor>
+              </td>
+              <td>
+                  <p-cellEditor>
+                      <ng-template pTemplate="input">
+                          <input pInputText type="text" [(ngModel)]="category.limit">
+                      </ng-template>
+                      <ng-template pTemplate="output">
+                          {{category.limit}}
+                      </ng-template>
+                  </p-cellEditor>
+              </td>
+              <td>
+                  <div class="flex align-items-center justify-content-center gap-2">
+                      <button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(category)" class="p-button-rounded p-button-text"></button>
+                      <button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(category)" class="p-button-rounded p-button-text p-button-success mr-2"></button>
+                      <button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(category, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+                  </div>
+              </td>
+          </tr>
+      </ng-template>
+  </p-table>
+</div>
+<div  *ngIf="categories.length == 0 ">
+  Welcome to MyBudget App!
+  Please start your saving journey by adding a budget for a category
+</div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { LoginService } from '../login.service';
 
 @Component({
   selector: 'app-logout',
@@ -10,10 +11,12 @@ export class LogoutComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private router: Router ) {}
+    private router: Router ,
+    private loginService: LoginService) {}
 
   ngOnInit(): void {
     localStorage.removeItem("token")
+    this.loginService.checkLoggedInObs()
     this.router.navigate(['login']);
   }
 

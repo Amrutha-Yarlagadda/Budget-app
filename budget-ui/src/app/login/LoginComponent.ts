@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
     private router: Router) { }
 
   ngOnInit(): void {
-      if (localStorage.getItem("token")) {
+      if (this.loginService.isLoggedIn()) {
         this.router.navigate(['dashboard']);
       }
     }
@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
         if (res.success) {
           localStorage.setItem("token", res.body.token)
           this.router.navigate(['dashboard']);
+          this.loginService.checkLoggedInObs()
         }
       });
     }

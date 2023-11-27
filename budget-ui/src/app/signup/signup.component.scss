@@ -9,10 +9,14 @@
   min-width: 300px;
 }
 
-mat-card-title,
 mat-card-content {
   display: flex;
   justify-content: center;
+}
+mat-card-title{
+  display: flex;
+  justify-content: center;
+  margin: 25px;
 }
 
 .error {

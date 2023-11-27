@@ -24,3 +24,23 @@ export interface Transaction {
   categoryId: String,
   createdDate: String
 }
+
+export interface SpendByCategory {
+  amount: BigInt;
+  categoryId: String
+  limit: Number
+}
+
+
+export interface SpendingByMonth{
+  amount: BigInt;
+  limit: BigInt;
+  month: String
+}
+
+export interface Category{
+  id ?: number;
+  name: string;
+  limit: number
+}
+

@@ -1,6 +1,35 @@
 
 <p-table [value]="transactions" styleClass="p-datatable-gridlines" [tableStyle]="{ 'min-width': '50rem' }">
-  <ng-template pTemplate="caption"> Header </ng-template>
+  <ng-template pTemplate="caption">
+    <nav>
+      <div class="main-nav">
+        <div>
+           <p-button class="modal-button" (click)="addTransaction()" icon="pi pi-info-circle" label="Add New Transaction"></p-button>
+        </div>
+        <div><p-button  class="modal-button" (click)="addCategory()" icon="pi pi-info-circle" label="Add New Category"></p-button>
+        </div>
+        <div class="push"><mat-form-field class="date-range">
+          <mat-label>Select Date Range</mat-label>
+          <mat-date-range-input [rangePicker]="dateRangePicker">
+            <input matStartDate
+              placeholder="Start date"
+              #dateRangeStart>
+            <input matEndDate
+              placeholder="End date"
+              #dateRangeEnd
+              (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">
+          </mat-date-range-input>
+          <mat-datepicker-toggle matPrefix
+            [for]="dateRangePicker">
+          </mat-datepicker-toggle>
+          <mat-date-range-picker #dateRangePicker></mat-date-range-picker>
+        </mat-form-field></div>
+      </div>
+    </nav>
+
+
+
+   </ng-template>
   <ng-template pTemplate="header">
       <tr>
         <th>Date</th>
@@ -11,7 +40,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-transaction>
       <tr>
-        <td>{{ transaction.createdDate }}</td>
+        <td>{{ transaction.createdDate |  date:'shortDate' }}</td>
         <td>{{ transaction.title }}</td>
         <td>{{ transaction.categoryId }}</td>
         <td>{{ transaction.amount }}</td>
