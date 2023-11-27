@@ -1,3 +1,4 @@
+process.env.TZ = "UTC"
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -98,7 +99,7 @@ app.post('/api/login', (req, res) => {
             });
         } else {
             let user = results[0]
-            let token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '10m' });
+            let token = jwt.sign({ id: user.id, username: user.username, exp: Math.ceil(Date.now() / 1000 + (1 * 60)) }, secretKey);
             res.json({
                 success: true,
                 message: "Login Successful",
@@ -110,10 +111,10 @@ app.post('/api/login', (req, res) => {
 })
 });
 
-app.get('/api/refreshToken', jwtMW,(req,res) => {
+app.get('/api/refreshToken', jwtMW, (req,res) => {
     let userId = req.auth.id
    
-    let token = jwt.sign({ id: user.id, username:req.auth.username}, secretKey, { expiresIn: '1m' });
+    let token = jwt.sign({ id: userId, username:req.auth.username, exp: Math.floor(Date.now() / 1000 + (1 * 60))}, secretKey);
             res.json({
                 success: true,
                 message: "refresh token Successful",
@@ -144,11 +145,19 @@ app.get('/', (req, res) => {
 
 app.use(function (err,req, res, next) {
     if (err.name === 'UnauthorizedError') {
-        res.status(401).json({
-            success: false,
-            officialError: err,
-            err: 'Username or password is incorrect 2'
-        });
+        if (err?.inner?.name == "JsonWebTokenError") {
+            res.status(401).json({
+                success: false,
+                officialError: err,
+                err: 'JsonWebToken Invalid'
+            });  
+        } else {
+            res.status(401).json({
+                success: false,
+                officialError: err,
+                err: 'Username or password is incorrect'
+            });
+        }
     }
     else {
         next(err);
