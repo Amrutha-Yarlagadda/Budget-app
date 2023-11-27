@@ -24,7 +24,7 @@ submit() {
   if (this.form.valid) {
   }
     this.apiService.addCategory(this.form.value).subscribe((res: ServerResponse)=> {
-      debugger
+
       this.requestDone = true
       this.isSuccess = res.success;
       this.message = res.message;

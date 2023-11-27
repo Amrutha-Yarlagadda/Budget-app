@@ -44,7 +44,7 @@ import { AddCategoryComponent } from './add-category/add-category.component';
 import { SpendingVsBudgetComponent } from './spending-vs-budget/spending-vs-budget.component';
 import { ConfigureBudgetComponent } from './configurebudget/configurebudget.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmationService } from 'primeng/api';
+import { TokenRefreshComponent } from './token-refresh/token-refresh.component';
 
 @NgModule({
   declarations: [
@@ -62,7 +62,8 @@ import { ConfirmationService } from 'primeng/api';
     AddTransactionComponent,
     AddCategoryComponent,
     SpendingVsBudgetComponent,
-    ConfigureBudgetComponent
+    ConfigureBudgetComponent,
+    TokenRefreshComponent
   ],
   imports: [
     BrowserModule,
@@ -92,9 +93,7 @@ import { ConfirmationService } from 'primeng/api';
       provide: ErrorHandler,
       useClass: ErrorHandlerService,
     },
-    DialogService,
-    ConfirmationService
-  ],
+    DialogService  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

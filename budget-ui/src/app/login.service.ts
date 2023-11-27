@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators'
 import { LoginRequest, ServerResponse } from './models';
@@ -21,6 +21,12 @@ export class LoginService {
     return this.http.post<ServerResponse>(this.endpoint, req );
     }
 
+  refreshToken(): Observable<ServerResponse> {
+    return this.http.get<ServerResponse>( "/api/refreshToken", {
+      headers: this.getBearerHeader()
+   });
+  }
+
   isLoggedIn(): boolean {
     return this.getToken() ? true : false
   }
@@ -28,9 +34,29 @@ export class LoginService {
   isLoggedInObs(): Observable<boolean> {
     return this.loggedInState
   }
+  private getBearerHeader() : HttpHeaders | {
+    [header: string]: string | string[];
+} {
+    return {'Authorization': `Bearer ${this.getToken()}`}
+  }
 
-  getToken(): string | null{
-     return localStorage.getItem('token')
+  getToken(): string | null {
+     let token =  localStorage.getItem('token')
+     if (token !=null) {
+      let d = new Date().toUTCString();
+      let currentTime =new Date(d).getTime()/1000
+      let tokenExpiry = this.getDecodedAccessToken(token).exp
+      let tokenTimeout = tokenExpiry - currentTime
+
+      if (tokenTimeout > 0) {
+        return token
+      } else {
+        return null
+      }
+    } else {
+      return null
+    }
+
   }
 
   checkLoggedInObs(token: string | null) {
