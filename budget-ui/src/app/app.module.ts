@@ -43,6 +43,9 @@ import { MatSelectModule } from '@angular/material/select';
 import { AddCategoryComponent } from './add-category/add-category.component';
 import { SpendingVsBudgetComponent } from './spending-vs-budget/spending-vs-budget.component';
 import { ConfigureBudgetComponent } from './configurebudget/configurebudget.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -81,14 +84,16 @@ import { ConfigureBudgetComponent } from './configurebudget/configurebudget.comp
     ButtonModule,
     MatNativeDateModule,
     MatDatepickerModule,
-    MatSelectModule
+    MatSelectModule,
+    ConfirmDialogModule
   ],
   providers: [
     {
       provide: ErrorHandler,
       useClass: ErrorHandlerService,
     },
-    DialogService
+    DialogService,
+    ConfirmationService
   ],
   bootstrap: [AppComponent]
 })

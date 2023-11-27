@@ -98,7 +98,7 @@ app.post('/api/login', (req, res) => {
             });
         } else {
             let user = results[0]
-            let token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '30m' });
+            let token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: '10m' });
             res.json({
                 success: true,
                 message: "Login Successful",
@@ -109,6 +109,19 @@ app.post('/api/login', (req, res) => {
         }    
 })
 });
+
+app.get('/api/refreshToken', jwtMW,(req,res) => {
+    let userId = req.auth.id
+   
+    let token = jwt.sign({ id: user.id, username:req.auth.username}, secretKey, { expiresIn: '1m' });
+            res.json({
+                success: true,
+                message: "refresh token Successful",
+                body: {
+                    token: token
+                }
+            });  
+}); 
 
 app.get('/api/dashboard', jwtMW, (req, res) => {
     res.json ({

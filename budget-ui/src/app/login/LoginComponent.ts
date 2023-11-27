@@ -40,9 +40,8 @@ export class LoginComponent implements OnInit {
         this.isSuccess = res.success;
         this.message = res.message;
         if (res.success) {
-          localStorage.setItem("token", res.body.token)
+          this.loginService.checkLoggedInObs(res.body.token)
           this.router.navigate(['dashboard']);
-          this.loginService.checkLoggedInObs()
         }
       });
     }
