@@ -115,7 +115,7 @@ describe('server', function () {
         },
         {
           id: 1000060,
-          title: '123',
+          title: 'BlueMoon',
           amount: 22,
           userId: 1000084,
           categoryId: 2,
@@ -133,7 +133,7 @@ describe('server', function () {
         },
         {
           id: 1000062,
-          title: 'Chiecker',
+          title: 'Chicken',
           amount: 11,
           userId: 1000084,
           categoryId: 1,
