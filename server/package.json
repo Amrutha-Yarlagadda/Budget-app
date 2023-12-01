@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha --require @babel/register"
- },
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
@@ -22,6 +22,7 @@
     "mysql": "^2.18.1"
   },
   "devDependencies": {
+    "@applitools/eyes-selenium": "^4.72.0",
     "mocha": "^10.2.0"
   }
 }
