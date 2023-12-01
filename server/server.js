@@ -9,6 +9,21 @@ const jwt = require('jsonwebtoken');
 const exjwt = require('express-jwt'); 
 const { title } = require('process');
 var cors = require('cors')
+var compression = require('compression')
+var morgan = require('morgan')
+
+app.use(compression({ filter: shouldCompress }))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
+
+function shouldCompress (req, res) {
+  if (req.headers['x-no-compression']) {
+    // don't compress responses with this request header
+    return false
+  }
+
+  // fallback to standard filter function
+  return compression.filter(req, res)
+}
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -333,13 +348,12 @@ app.get('/api/spendingByCategory', jwtMW, async (req,res) => {
 app.get('/api/budgetByMonth', jwtMW,(req,res) => {
     let userId = req.auth.id
     let date = new Date()
-    let day = date.getDate() + 1;
+    let day = date.getDate()
     let month = date.getMonth() + 1;
     let year = date.getFullYear();
     let startDate = year + "-01-01"
     let endDate = `${year}-${month}-${day}`
-    console.log(startDate)
-    console.log(endDate)
+
     connection.query('SELECT * FROM budget_spending where userId = ? AND createdDate >= ? and createdDate <= ?',[userId, startDate, endDate], function (error, results, fields) {
              if (error)  {
             console.log(error)
@@ -356,26 +370,12 @@ app.get('/api/budgetByMonth', jwtMW,(req,res) => {
                         err: 'Internal Server Error'
                     });
                 } else {
-                    const groupByCat = []
+                    
                     const resultModified = JSON.parse(JSON.stringify(results))
                     console.log(resultModified)
-                    const groupByCategory = resultModified.reduce((group, product) => {
-                        const { createdDate } = product;
-                        const month = new Date(createdDate).getMonth();
-                        group[month] = group[month] ?? [];
-                        group[month].push(product);
-                        return group;
-                    }, {});
-                    let budgetSet = categories.reduce((t, cv) => t + cv.limit,0)
-                    for (const [key, value] of Object.entries(groupByCategory)) {
-                        value.reduce((ac, cv) =>  {
-                            ac + cv.amount
-                        }, 0)
-                        groupByCat.push({month: monthNames[key], amount: value.reduce((ac, cv) =>  ac + cv.amount, 0), limit: budgetSet})
-                    }
-                    
+                    console.log(categories)
                     res.json({
-                        spendingByCategory: groupByCat
+                        spendingByCategory: groupByMonth(resultModified, categories)
                     });
             }
         })
@@ -383,9 +383,25 @@ app.get('/api/budgetByMonth', jwtMW,(req,res) => {
     });  
 }); 
 
-var groupBy = function(xs, key) {
-  return xs.reduce(function(rv, x) {(rv[x[key]] = rv[x[key]] || []).push(x); return rv; }, {});
-};
+function groupByMonth(result, categories) {
+    const groupByCat = []
+    const groupByCategory = result.reduce((group, product) => {
+        const { createdDate } = product;
+        const month = new Date(createdDate).getMonth();
+        group[month] = group[month] ?? [];
+        group[month].push(product);
+        return group;
+    }, {});
+    let budgetSet = categories.reduce((t, cv) => t + cv.limit,0)
+    for (const [key, value] of Object.entries(groupByCategory)) {
+        value.reduce((ac, cv) =>  {
+            ac + cv.amount
+        }, 0)
+        groupByCat.push({month: monthNames[key], amount: value.reduce((ac, cv) =>  ac + cv.amount, 0), limit: budgetSet})
+    }
+    return groupByCat
+}
+
 
 app.listen(PORT, () => {
     console.log(`Serving on port ${PORT}`);
@@ -395,11 +411,6 @@ function encryptPassword(password){
     const hash = crypto.createHash('sha256').update(password).digest('hex'); 
     return hash;
     }
-    
-    function transformDate(date){
-        return date.getYear() + "-"+ date.getMonth() + "-" + date.getDay()
-    }
-
 async function getCategoriesMap(userId) {
     return new Promise(resolve => {
     connection.query('SELECT * FROM budget_category where userId = ?', [userId], function (error, results, fields) {
@@ -413,4 +424,7 @@ async function getCategoriesMap(userId) {
           return resolve(groupByCategory)
     });  
 })
+}
+module.exports = {
+    groupByMonth
 }
