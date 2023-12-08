@@ -394,6 +394,7 @@ app.get('/api/budgetByMonth', jwtMW,(req,res) => {
     });  
 }); 
 
+
 function groupByMonth(result, categories) {
     const groupByCat = []
     const groupByCategory = result.reduce((group, product) => {
