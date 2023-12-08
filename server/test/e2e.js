@@ -163,15 +163,15 @@ describe('ACME Bank', () => {
         // Traditional assertions that scrape the page for text values are not needed here.
 
         // Load the login page.
-        await driver.get("https://demo.applitools.com");
+        await driver.get("http://localhost:4200/login");
 
         // Verify the full login page loaded correctly.
         await eyes.check(Target.window().fully().withName("Login page"));
 
         // Perform login.
-        await driver.findElement(By.css("#username")).sendKeys("andy");
-        await driver.findElement(By.css("#password")).sendKeys("i<3pandas");
-        await driver.findElement(By.id("log-in")).click();
+        await driver.findElement(By.css("#username")).sendKeys("vc12345");
+        await driver.findElement(By.css("#password")).sendKeys("vc12345");
+        await driver.findElement(By.id("loginBtn")).click();
 
         // Verify the full main page loaded correctly.
         // This snapshot uses LAYOUT match level to avoid differences in closing time text.

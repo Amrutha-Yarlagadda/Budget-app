@@ -15,6 +15,18 @@ var morgan = require('morgan')
 app.use(compression({ filter: shouldCompress }))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
 
+const databaseDestination = process.env.DATABASE_HOST;
+const mysqlDbUsername = process.env.MYSQL_DB_USERNAME;
+const mysqlDbPwd = process.env.MYSQL_DB_PASSWORD;
+const mysqlDbSchemaName = process.env.MYSQL_DB_SCHEMA_NAME;
+
+var connection = mysql.createConnection({
+    host :  databaseDestination,
+    user : mysqlDbUsername,
+    password : mysqlDbPwd,
+    database: mysqlDbSchemaName,
+});
+
 function shouldCompress (req, res) {
   if (req.headers['x-no-compression']) {
     // don't compress responses with this request header
@@ -39,12 +51,7 @@ app.use((req, res, next) => {
     next()
 });
 
-var connection = mysql.createConnection({
-    host : 'localhost',
-    user : 'root',
-    password : 'password',
-    database: 'budget_app',
-});
+
 connection.connect();
 const PORT = 3000;
 
@@ -335,8 +342,10 @@ app.get('/api/spendingByCategory', jwtMW, async (req,res) => {
                 return group;
               }, {});
 
-            for (const [key, value] of Object.entries(groupByCategory)) {
-                groupByCat.push({categoryId: categoryMap[key][0].name, limit: categoryMap[key][0].limit, amount: value.reduce((ac, cv) =>  ac + cv.amount, 0)})
+            for (const [key, value] of Object.entries(categoryMap)) {
+               groupByCat.push({categoryId: value[0].id, limit: value[0].limit, amount: groupByCategory[key] ? groupByCategory[key].reduce((ac, cv) =>  ac + cv.amount, 0) : []})
+
+               // groupByCat.push({categoryId: categoryMap[key][0].name, limit: categoryMap[key][0].limit, amount: value.reduce((ac, cv) =>  ac + cv.amount, 0)})
               }
             res.json({
                  spendingByCategory: groupByCat
@@ -370,10 +379,7 @@ app.get('/api/budgetByMonth', jwtMW,(req,res) => {
                         err: 'Internal Server Error'
                     });
                 } else {
-                    
                     const resultModified = JSON.parse(JSON.stringify(results))
-                    console.log(resultModified)
-                    console.log(categories)
                     res.json({
                         spendingByCategory: groupByMonth(resultModified, categories)
                     });
