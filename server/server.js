@@ -20,6 +20,11 @@ const mysqlDbUsername = process.env.MYSQL_DB_USERNAME;
 const mysqlDbPwd = process.env.MYSQL_DB_PASSWORD;
 const mysqlDbSchemaName = process.env.MYSQL_DB_SCHEMA_NAME;
 
+console.log("databaseDestination: " + databaseDestination)
+console.log("mysqlDbUsername: " + mysqlDbUsername)
+console.log("mysqlDbPwd: " + mysqlDbPwd)
+console.log("mysqlDbSchemaName: " + mysqlDbSchemaName)
+
 var connection = mysql.createConnection({
     host :  databaseDestination,
     user : mysqlDbUsername,
