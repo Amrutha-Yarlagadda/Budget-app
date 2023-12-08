@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators'
 import { LoginRequest, ServerResponse } from './models';
 import { ErrorHandlerService } from './error-handler.service';
-import { jwtDecode } from "jwt-decode";
+import jwt_decode from "jwt-decode";
 
 @Injectable({
   providedIn: 'root'
@@ -76,7 +76,7 @@ export class LoginService {
 
   getDecodedAccessToken(token: string): any {
     try {
-      return jwtDecode(token);
+      return jwt_decode(token);
     } catch(Error) {
       return null;
     }
