@@ -9,8 +9,8 @@ CREATE TABLE `users` (
   `lastName` varchar(50) DEFAULT NULL,
   `username` varchar(50) DEFAULT NULL,
   `passwordHash` varchar(32) NOT NULL,
-  `registeredAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `lastLogin` datetime DEFAULT NULL,
+  `registeredAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `lastLogin` timestamp DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_username` (`username`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1000059 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
@@ -33,7 +33,7 @@ CREATE TABLE `budget_spending` (
   `userId` bigint NOT NULL,
   `categoryId` bigint NOT NULL,
   `createdDate` DATE NOT NULL,
-  `modifiedAt` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `modifiedAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `userId` (`userId`),
   CONSTRAINT `budget_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`id`),

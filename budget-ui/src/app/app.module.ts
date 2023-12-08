@@ -45,6 +45,7 @@ import { SpendingVsBudgetComponent } from './spending-vs-budget/spending-vs-budg
 import { ConfigureBudgetComponent } from './configurebudget/configurebudget.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TokenRefreshComponent } from './token-refresh/token-refresh.component';
+import { FieldsetModule } from 'primeng/fieldset';
 
 @NgModule({
   declarations: [
@@ -86,7 +87,8 @@ import { TokenRefreshComponent } from './token-refresh/token-refresh.component';
     MatNativeDateModule,
     MatDatepickerModule,
     MatSelectModule,
-    ConfirmDialogModule
+    ConfirmDialogModule,
+    FieldsetModule
   ],
   providers: [
     {
