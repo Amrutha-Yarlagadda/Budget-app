@@ -11,6 +11,7 @@ const { title } = require('process');
 var cors = require('cors')
 var compression = require('compression')
 var morgan = require('morgan')
+var utils = require('./utils');
 
 app.use(compression({ filter: shouldCompress }))
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'))
@@ -40,9 +41,6 @@ function shouldCompress (req, res) {
   return compression.filter(req, res)
 }
 
-const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
-];
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -346,9 +344,7 @@ app.get('/api/spendingByCategory', jwtMW, async (req,res) => {
               }, {});
 
             for (const [key, value] of Object.entries(categoryMap)) {
-               groupByCat.push({categoryId: value[0].id, limit: value[0].limit, amount: groupByCategory[key] ? groupByCategory[key].reduce((ac, cv) =>  ac + cv.amount, 0) : []})
-
-               // groupByCat.push({categoryId: categoryMap[key][0].name, limit: categoryMap[key][0].limit, amount: value.reduce((ac, cv) =>  ac + cv.amount, 0)})
+               groupByCat.push({categoryId: value[0].name, limit: value[0].limit, amount: groupByCategory[key] ? groupByCategory[key].reduce((ac, cv) =>  ac + cv.amount, 0) : []})
               }
             res.json({
                  spendingByCategory: groupByCat
@@ -384,7 +380,7 @@ app.get('/api/budgetByMonth', jwtMW,(req,res) => {
                 } else {
                     const resultModified = JSON.parse(JSON.stringify(results))
                     res.json({
-                        spendingByCategory: groupByMonth(resultModified, categories)
+                        spendingByCategory: utils.groupByMonth(resultModified, categories)
                     });
             }
         })
@@ -393,24 +389,6 @@ app.get('/api/budgetByMonth', jwtMW,(req,res) => {
 }); 
 
 
-function groupByMonth(result, categories) {
-    const groupByCat = []
-    const groupByCategory = result.reduce((group, product) => {
-        const { createdDate } = product;
-        const month = new Date(createdDate).getMonth();
-        group[month] = group[month] ?? [];
-        group[month].push(product);
-        return group;
-    }, {});
-    let budgetSet = categories.reduce((t, cv) => t + cv.limit,0)
-    for (const [key, value] of Object.entries(groupByCategory)) {
-        value.reduce((ac, cv) =>  {
-            ac + cv.amount
-        }, 0)
-        groupByCat.push({month: monthNames[key], amount: value.reduce((ac, cv) =>  ac + cv.amount, 0), limit: budgetSet})
-    }
-    return groupByCat
-}
 
 
 app.listen(PORT, () => {
@@ -435,7 +413,4 @@ async function getCategoriesMap(userId) {
           return resolve(groupByCategory)
     });  
 })
-}
-module.exports = {
-    groupByMonth
 }

@@ -12,9 +12,11 @@ const { Eyes,
     BrowserType,
     ScreenOrientation,
     DeviceName } = require('@applitools/eyes-selenium');
-
-describe('ACME Bank', () => {
-    // This Mocha test case class contains everything needed to run a full visual test against the ACME bank site.
+const webdriver = require('selenium-webdriver');
+var assert = require('assert');
+describe('Budget App', () => {
+    
+    // This Mocha test case class contains everything needed to run a full visual test against the Budget APP site.
     // It runs the test once locally.
     // If you use the Ultrafast Grid, then it performs cross-browser testing against multiple unique browsers.
     
@@ -38,14 +40,6 @@ describe('ACME Bank', () => {
     let eyes;
 
     before(async () => {
-        // This method sets up the configuration for running visual tests.
-        // The configuration is shared by all tests in a test suite, so it belongs in a `before` method.
-        // If you have more than one test class, then you should abstract this configuration to avoid duplication. 
-
-        // Read the Applitools API key from an environment variable.
-        // To find your Applitools API key:
-        // https://applitools.com/tutorials/getting-started/setting-up-your-environment.html
-        applitoolsApiKey = process.env.APPLITOOLS_API_KEY;
 
         // Read the headless mode setting from an environment variable.
         // Use headless mode for Continuous Integration (CI) execution.
@@ -155,15 +149,8 @@ describe('ACME Bank', () => {
         );
     })
 
-    it('should log into a budget app', async () => {
-        // This test covers login for the Applitools demo site, which is a dummy banking app.
-        // The interactions use typical Selenium calls,
-        // but the verifications use one-line snapshot calls with Applitools Eyes.
-        // If the page ever changes, then Applitools will detect the changes and highlight them in the Eyes Test Manager.
-        // Traditional assertions that scrape the page for text values are not needed here.
-
-        // Load the login page.
-        await driver.get("https://budget-api-govnl.ondigitalocean.app/login");
+    it('should log into a budget app and add new categories and transactions', async () => {
+        await driver.get("http://localhost:4200/login");
 
         // Verify the full login page loaded correctly.
         await eyes.check(Target.window().fully().withName("Login page"));
@@ -176,21 +163,92 @@ describe('ACME Bank', () => {
         // Verify the full main page loaded correctly.
         // This snapshot uses LAYOUT match level to avoid differences in closing time text.
         await eyes.check(Target.window().fully().withName("Add Category Page").layout());
-
-               // Perform login.
-        await driver.findElement(By.css("#configure-add-category")).sendKeys("vc12345");
-           
+       
+        const until = webdriver.until;
+        console.log("element found before")
+        let el =  await driver.wait(until.elementLocated(By.css("#configure-add-category")), 5 * 1000)
+        console.log("element found" + el)
+        el.click();   
+   
+        let date = new Date()
+        let todayDate = date.getMonth() + 1 +"/" + date.getDay() +"/" + date.getYear()
 
         await eyes.check(Target.window().fully().withName("Add Category Modal").layout());
-        await driver.findElement(By.css("#add-category-name")).sendKeys("Groceries");
+        await driver.findElement(By.css("#add-category-name")).sendKeys("Groceries" + Math.random());
         await driver.findElement(By.css("#add-category-limit")).sendKeys(123);
         await driver.findElement(By.id("add-category-btn")).click();
     
-    
-
         await driver.findElement(By.id("view-transactions")).click();
         await driver.findElement(By.id("add-transaction-btn")).click();
+        await driver.findElement(By.id("add-transaction-title")).sendKeys("Energy Drink");
+   
+        await driver.findElement(By.id("add-transaction-date")).sendKeys(todayDate);
+        await driver.findElement(By.id("add-transaction-amount")).sendKeys(120);
+
+        await driver.findElement(By.id("add-transaction-category")).click();
+        await driver.findElement(By.id("GROCERIES")).click();
+        await driver.findElement(By.id("add-transaction-btn")).click();
+        let  transactionsListIsPresent = await driver.findElement(By.id("view-transactions-list")).isPresent();
+        assert.equal(transactionsListIsPresent , true)
+    });
+    
+
+    it('should be able to view all charts', async () => {
+
+        // Load the login page.
+        await driver.get("http://localhost:4200/login");
+
+        // Verify the full login page loaded correctly.
+        await eyes.check(Target.window().fully().withName("Login page"));
+
+        // Perform login.
+        await driver.findElement(By.css("#username")).sendKeys("testuser");
+        await driver.findElement(By.css("#password")).sendKeys("testuser123");
+        await driver.findElement(By.id("loginBtn")).click();
+
+        // Verify the full main page loaded correctly.
+        // This snapshot uses LAYOUT match level to avoid differences in closing time text.
+        await eyes.check(Target.window().fully().withName("Add Category Page").layout());
+       
+        const until = webdriver.until;
+        console.log("element found before")
+        let el =  await driver.wait(until.elementLocated(By.css("#configure-add-category")), 5 * 1000)
+        console.log("element found" + el)
+        el.click();   
+   
+        let date = new Date()
+        let todayDate = date.getMonth() + 1 +"/" + date.getDay() +"/" + date.getYear()
+
+        await eyes.check(Target.window().fully().withName("Add Category Modal").layout());
+        await driver.findElement(By.css("#add-category-name")).sendKeys("Groceries" + Math.random());
+        await driver.findElement(By.css("#add-category-limit")).sendKeys(123);
+        await driver.findElement(By.id("add-category-btn")).click();
+    
         await driver.findElement(By.id("view-transactions")).click();
+        await driver.findElement(By.id("add-transaction-btn")).click();
+        await driver.findElement(By.id("add-transaction-title")).sendKeys("Energy Drink");
+
+        let  transactionsListIsPresent = await driver.findElement(By.id("view-transactions-list")).isPresent();
+       assert.equal(transactionsListIsPresent , true)
+        await driver.findElement(By.id("add-transaction-date")).sendKeys(todayDate);
+        await driver.findElement(By.id("add-transaction-amount")).sendKeys(120);
+
+        await driver.findElement(By.id("add-transaction-category")).click();
+        await driver.findElement(By.id("GROCERIES")).click();
+        await driver.findElement(By.id("add-transaction-btn")).click();
+        assert.equal(transactionsListIsPresent , true)
+
+        // check if spending-vs-budget chart is present
+        await driver.findElement(By.id("view-spending-vs-budget")).click();
+        await driver.findElement(By.id("spending-vs-budget-chart")).isPresent()
+
+        // check if spending-by-month chart is present
+        await driver.findElement(By.id("view-spending-by-month")).click();
+        await driver.findElement(By.id("spending-by-month-chart")).isPresent()
+      
+         // check if month by month chart is present
+        await driver.findElement(By.id("view-month-by-month")).click();
+        await driver.findElement(By.id("month-by-month-chart")).isPresent()
     });
     
     afterEach(async function() {
@@ -200,14 +258,6 @@ describe('ACME Bank', () => {
 
         // Quit the WebDriver instance.
         await driver.quit();
-
-        // Warning: `eyes.closeAsync()` will NOT wait for visual checkpoints to complete.
-        // You will need to check the Eyes Test Manager for visual results per checkpoint.
-        // Note that "unresolved" and "failed" visual checkpoints will not cause the Mocha test to fail.
-
-        // If you want the ACME demo app test to wait synchronously for all checkpoints to complete, then use `eyes.close()`.
-        // If any checkpoints are unresolved or failed, then `eyes.close()` will make the ACME demo app test fail.
-    
     });
     
     after(async () => {

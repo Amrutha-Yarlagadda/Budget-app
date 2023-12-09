@@ -1,5 +1,5 @@
 var assert = require('assert');
-var server = require('../server');
+var utils = require('../utils');
 
 describe('server', function () {
   describe('groupByMonth', function () {
@@ -157,7 +157,7 @@ describe('server', function () {
          { id: 3, name: 'TEST', userId: 1000084, limit: 123 },
          { id: 4, name: 'COMMUTE', userId: 1000084, limit: 500 }
       ]
-      let groupByMonth = server.groupByMonth(expensesList, categories)
+      let groupByMonth = utils.groupByMonth(expensesList, categories)
       assert.deepEqual(groupByMonth, [
         { month: 'July', amount: 500, limit: 5623 },
         { month: 'September', amount: 500, limit: 5623 },

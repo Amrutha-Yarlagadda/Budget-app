@@ -35,7 +35,6 @@ submit() {
 
       if (this.isSuccess) {
         this.dialogService.dialogComponentRefMap.forEach(dialog => {
-          debugger
           dialog.destroy();
         });
       }

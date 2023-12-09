@@ -5,13 +5,15 @@
 <form [formGroup]="form" (ngSubmit)="submit()">
 <p>
   <mat-form-field>
-    <input id="username" type="text" matInput placeholder="Username" formControlName="username">
+    <input id="username" type="text" matInput placeholder="Username" formControlName="username" aria-required="true"
+    aria-invalid="false">
   </mat-form-field>
 </p>
 
 <p>
   <mat-form-field>
-    <input id="password" type="password" matInput placeholder="Password" formControlName="password">
+    <input id="password" type="password" matInput placeholder="Password" formControlName="password" aria-required="true"
+    aria-invalid="false">
   </mat-form-field>
 </p>
 

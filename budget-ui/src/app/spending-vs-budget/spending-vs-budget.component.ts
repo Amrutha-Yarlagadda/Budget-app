@@ -35,7 +35,7 @@ export class SpendingVsBudgetComponent implements OnInit {
               data: this.spendingByCategory.map(value => value.amount)
             },
             {
-              label: 'Budget Limit',
+              label: 'Budget Limit ',
               backgroundColor: documentStyle.getPropertyValue('--pink-500'),
               borderColor: documentStyle.getPropertyValue('--pink-500'),
               data: this.spendingByCategory.map(value => value.limit)
