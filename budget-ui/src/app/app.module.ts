@@ -46,6 +46,8 @@ import { ConfigureBudgetComponent } from './configurebudget/configurebudget.comp
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { TokenRefreshComponent } from './token-refresh/token-refresh.component';
 import { FieldsetModule } from 'primeng/fieldset';
+import { ToastModule } from 'primeng/toast';
+import { MessageService } from 'primeng/api';
 
 @NgModule({
   declarations: [
@@ -88,14 +90,16 @@ import { FieldsetModule } from 'primeng/fieldset';
     MatDatepickerModule,
     MatSelectModule,
     ConfirmDialogModule,
-    FieldsetModule
+    FieldsetModule,
+    ToastModule
   ],
   providers: [
     {
       provide: ErrorHandler,
       useClass: ErrorHandlerService,
     },
-    DialogService  ],
+    DialogService,
+    MessageService  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

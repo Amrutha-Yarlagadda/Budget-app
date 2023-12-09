@@ -9,7 +9,6 @@ import { LoginService } from './login.service';
   providedIn: 'root'
 })
 export class ApiService {
-  public signUpUrl = "/api/bu"
 
   constructor(private http: HttpClient,
     private loginService: LoginService) {

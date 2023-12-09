@@ -4,6 +4,7 @@ import { ApiService } from '../api.service';
 import { Category, ServerResponse } from '../models';
 import { Utils } from '../utils';
 import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-add-category',
   templateUrl: './add-category.component.html',
@@ -13,7 +14,9 @@ export class AddCategoryComponent {
   public isSuccess = false
   public message = ""
   public requestDone = false
-  constructor(private apiService: ApiService, private dialogService: DialogService) {}
+  constructor(private apiService: ApiService,
+     private dialogService: DialogService,
+     private messageService: MessageService) {}
 
   form: FormGroup = new FormGroup({
     name: new FormControl(''),
@@ -26,15 +29,20 @@ submit() {
     this.apiService.addCategory(this.form.value).subscribe((res: ServerResponse)=> {
 
       this.requestDone = true
-      this.isSuccess = res.success;
+      this.isSuccess = res ? true : false;
       this.message = res.message;
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: res.message });
+
       if (this.isSuccess) {
         this.dialogService.dialogComponentRefMap.forEach(dialog => {
+          debugger
           dialog.destroy();
         });
       }
     },
     error => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error });
+
       this.isSuccess = false;
       this.requestDone = true
       this.message = error.error;

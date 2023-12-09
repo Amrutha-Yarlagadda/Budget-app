@@ -1,5 +1,5 @@
 
-<div><p-button  class="modal-button" (click)="addCategory()" label="Add New Category"></p-button>
+<div><p-button  id="configure-add-category" class="modal-button" (click)="addCategory()" label="Add New Category"></p-button>
 <div *ngIf="categories.length != 0" class="card">
   <p-table [value]="categories" dataKey="id" editMode="row" [tableStyle]="{'min-width': '50rem'}">
       <ng-template pTemplate="header">

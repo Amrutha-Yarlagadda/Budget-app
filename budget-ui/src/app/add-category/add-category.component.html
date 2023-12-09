@@ -3,17 +3,17 @@
     <form [formGroup]="form" (ngSubmit)="submit()">
       <p>
         <mat-form-field>
-          <input type="text" matInput placeholder="Name" formControlName="name">
+          <input id="add-category-name" type="text" matInput placeholder="Name" formControlName="name">
         </mat-form-field>
       </p>
       <p>
         <mat-form-field>
-          <input type="number" matInput placeholder="Limit Amount" formControlName="limit">
+          <input id="add-category-limit" type="number" matInput placeholder="Limit Amount" formControlName="limit">
         </mat-form-field>
       </p>
 
       <div class="button">
-        <button type="submit" mat-button>Add</button>
+        <button id="add-category-btn" type="submit" mat-button>Add</button>
       </div>
 
 

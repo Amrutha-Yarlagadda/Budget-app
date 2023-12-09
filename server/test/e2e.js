@@ -141,7 +141,7 @@ describe('ACME Bank', () => {
             // The name of the application under test.
             // All tests for the same app should share the same app name.
             // Set this name wisely: Applitools features rely on a shared app name across tests.
-            'ACME Bank',
+            'Budget App',
             
             // The name of the test case for the given application.
             // Additional unique characteristics of the test may also be specified as part of the test name,
@@ -155,7 +155,7 @@ describe('ACME Bank', () => {
         );
     })
 
-    it('should log into a bank account', async () => {
+    it('should log into a budget app', async () => {
         // This test covers login for the Applitools demo site, which is a dummy banking app.
         // The interactions use typical Selenium calls,
         // but the verifications use one-line snapshot calls with Applitools Eyes.
@@ -163,7 +163,7 @@ describe('ACME Bank', () => {
         // Traditional assertions that scrape the page for text values are not needed here.
 
         // Load the login page.
-        await driver.get("http://localhost:4200/login");
+        await driver.get("https://budget-api-govnl.ondigitalocean.app/login");
 
         // Verify the full login page loaded correctly.
         await eyes.check(Target.window().fully().withName("Login page"));
@@ -175,7 +175,22 @@ describe('ACME Bank', () => {
 
         // Verify the full main page loaded correctly.
         // This snapshot uses LAYOUT match level to avoid differences in closing time text.
-        await eyes.check(Target.window().fully().withName("Main page").layout());
+        await eyes.check(Target.window().fully().withName("Add Category Page").layout());
+
+               // Perform login.
+        await driver.findElement(By.css("#configure-add-category")).sendKeys("vc12345");
+           
+
+        await eyes.check(Target.window().fully().withName("Add Category Modal").layout());
+        await driver.findElement(By.css("#add-category-name")).sendKeys("Groceries");
+        await driver.findElement(By.css("#add-category-limit")).sendKeys(123);
+        await driver.findElement(By.id("add-category-btn")).click();
+    
+    
+
+        await driver.findElement(By.id("view-transactions")).click();
+        await driver.findElement(By.id("add-transaction-btn")).click();
+        await driver.findElement(By.id("view-transactions")).click();
     });
     
     afterEach(async function() {

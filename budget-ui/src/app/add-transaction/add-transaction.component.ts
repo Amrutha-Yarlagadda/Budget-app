@@ -4,6 +4,7 @@ import { ApiService } from '../api.service';
 import { Category, ServerResponse } from '../models';
 import { Utils } from '../utils';
 import { DialogService } from 'primeng/dynamicdialog';
+import { MessageService } from 'primeng/api';
 @Component({
   selector: 'app-add-transaction',
   templateUrl: './add-transaction.component.html',
@@ -15,7 +16,7 @@ export class AddTransactionComponent {
   public requestDone = false
 
   categories: Category[] = []
-  constructor(private apiService: ApiService, private dialogService: DialogService) {
+  constructor(private apiService: ApiService, private dialogService: DialogService,private messageService: MessageService) {
     this.apiService.getCategories().subscribe(response =>
       this.categories = response
       )
@@ -41,6 +42,8 @@ submit() {
       this.requestDone = true
       this.isSuccess = res.success;
       this.message = res.message;
+      this.messageService.add({ severity: 'success', summary: 'Success', detail: res.message });
+
       if (this.isSuccess) {
         this.apiService.getCategories().subscribe(response =>
           this.categories = response
@@ -49,6 +52,13 @@ submit() {
           dialog.destroy();
         });
       }
+    },
+    error => {
+      this.messageService.add({ severity: 'error', summary: 'Error', detail: error.error });
+
+      this.isSuccess = false;
+      this.requestDone = true
+      this.message = error.error;
     })
   }
 }
