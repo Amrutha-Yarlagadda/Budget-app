@@ -136,7 +136,6 @@ app.post('/api/login', (req, res) => {
 
 app.get('/api/refreshToken', jwtMW, (req,res) => {
     let userId = req.auth.id
-   
     let token = jwt.sign({ id: userId, username:req.auth.username, exp: Math.floor(Date.now() / 1000 + (1 * 60))}, secretKey);
             res.json({
                 success: true,
@@ -147,24 +146,6 @@ app.get('/api/refreshToken', jwtMW, (req,res) => {
             });  
 }); 
 
-app.get('/api/dashboard', jwtMW, (req, res) => {
-    res.json ({
-        success: true,
-        myContent: 'Secret content that only logged in people can see'
-    });
-});
-
-app.get('/api/settings', jwtMW, (req, res) => {
-    console .log (req)
-    res.json ({
-        success: true,
-        myContent: 'Authorized to access settings page.'
-    });
-});
-
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
 
 app.use(function (err,req, res, next) {
     if (err.name === 'UnauthorizedError') {
@@ -264,17 +245,17 @@ app.post('/api/transaction', jwtMW,(req, res) =>{
     const  amount = req.body.amount;
     const  createdDate = req.body.createdDate;
     const  categoryId = req.body.categoryId;
+    const  id= req.body.id;
 
     if (!title || !amount) {
         res.status(400).send("all fields are required")
         return
     }
-    connection.query('Insert INTO budget_spending (title, amount, userId, createdDate, categoryId) VALUES ( ?, ?, ?, ? , ?)',[title, amount, req.auth.id, createdDate, categoryId], function (error, results, fields) {
-
+    connection.query('UPDATE budget_spending SET `title` = ?, `amount` = ?, `createdDate` = ?, `categoryId` = ?   WHERE id = ? AND userId = ?',[title, amount, createdDate, categoryId, id,  req.auth.id], function (error, results, fields) {
         if (error)  {
             console.log("budget creation failed" + error.message)
             if (error.code == "ER_DUP_ENTRY") {
-                res.status(409).send("Budget already exists")
+                res.status(409).send("Transaction already exists")
             } else {
                 res.status(400).send("Something went wrong")
             }
@@ -283,13 +264,12 @@ app.post('/api/transaction', jwtMW,(req, res) =>{
             console.log("Budget is created")
             res.status(200).send({
                 success: true,
-                message : "Budget successfully created"
+                message : "Transaction successfully created"
             })
         }
        
     });
 });
-
 
 
 app.get('/api/transactions', jwtMW, async (req,res) => {

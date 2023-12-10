@@ -1,5 +1,5 @@
 import { Input, Component, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { SignupService } from '../signup.service';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { ServerResponse } from '../models';
@@ -11,13 +11,18 @@ import { ServerResponse } from '../models';
   providers: [SignupService]
 })
 export class SignupComponent implements OnInit {
+  username = new FormControl('', [Validators.required]);
+  password = new FormControl('', [Validators.required]);
+  firstName = new FormControl('', [Validators.required]);
+  lastName = new FormControl('', [Validators.required]);
+  email = new FormControl('', [Validators.required, Validators.email]);
 
   form: FormGroup = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    email: new FormControl('')
+    username: this.username,
+    password: this.password,
+    firstName: this.firstName,
+    lastName: this.lastName,
+    email: this.email
   });
 
   public isSuccess = false
@@ -43,7 +48,20 @@ export class SignupComponent implements OnInit {
         if (res.success) {
           this.router.navigate(['login']);
         }
+      },
+      error => {
+        this.requestDone = true
+        this.isSuccess = error?.error?.success;
+        this.message = error?.error?.message;
       })
     }
+  }
+
+  getErrorMessage(valueToCheck: FormControl) {
+    if (valueToCheck.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return valueToCheck.hasError('email') ? 'Not a valid email' : '';
   }
 }

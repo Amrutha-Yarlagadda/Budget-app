@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { LoginService } from '../login.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ServerResponse } from '../models';
@@ -15,9 +15,12 @@ export class LoginComponent implements OnInit {
 
   @Output() submitEM = new EventEmitter();
 
+  username = new FormControl('', [Validators.required]);
+  password = new FormControl('', [Validators.required]);
+
   form: FormGroup = new FormGroup({
-    username: new FormControl(''),
-    password: new FormControl(''),
+    username: this.username,
+    password: this.password
   });
 
   public isSuccess = false;
@@ -45,8 +48,22 @@ export class LoginComponent implements OnInit {
           this.loginService.checkLoggedInObs(res.body.token)
           this.router.navigate(['dashboard']);
         }
+      },
+
+      error => {
+        this.requestDone = true
+        this.isSuccess = error?.error?.success;
+        this.message = error?.error?.message;
       });
     }
+  }
+
+  getErrorMessage(valueToCheck: FormControl) {
+    if (valueToCheck.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return valueToCheck.hasError('email') ? 'Not a valid email' : '';
   }
 
 }

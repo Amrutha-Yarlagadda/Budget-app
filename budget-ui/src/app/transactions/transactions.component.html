@@ -12,9 +12,11 @@
           <mat-label>Select Date Range</mat-label>
           <mat-date-range-input [rangePicker]="dateRangePicker">
             <input matStartDate
+             aria-label="start date"
               placeholder="Start date"
               #dateRangeStart>
             <input matEndDate
+              aria-label="start date"
               placeholder="End date"
               #dateRangeEnd
               (dateChange)="dateRangeChange(dateRangeStart, dateRangeEnd)">

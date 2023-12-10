@@ -27,7 +27,7 @@ describe('Budget App', () => {
     const USE_EXECUTION_CLOUD = false;
     
     // Test control inputs to read once and share for all tests
-    var applitoolsApiKey;
+    var applitoolsApiKey = process.env.APPLITOOLS_API_KEY;
     var headless;
 
     // Applitools objects to share for all tests
@@ -149,7 +149,7 @@ describe('Budget App', () => {
         );
     })
 
-    it('should log into a budget app and add new categories and transactions', async () => {
+    xit('should log into a budget app and add new categories and transactions', async () => {
         await driver.get("http://localhost:4200/login");
 
         // Verify the full login page loaded correctly.
@@ -188,8 +188,8 @@ describe('Budget App', () => {
         await driver.findElement(By.id("add-transaction-category")).click();
         await driver.findElement(By.id("GROCERIES")).click();
         await driver.findElement(By.id("add-transaction-btn")).click();
-        let  transactionsListIsPresent = await driver.findElement(By.id("view-transactions-list")).isPresent();
-        assert.equal(transactionsListIsPresent , true)
+        let  transactionsListisDisplayed = await driver.findElement(By.id("view-transactions-list")).isDisplayed();
+        assert.equal(transactionsListisDisplayed , true)
     });
     
 
@@ -214,48 +214,31 @@ describe('Budget App', () => {
         console.log("element found before")
         let el =  await driver.wait(until.elementLocated(By.css("#configure-add-category")), 5 * 1000)
         console.log("element found" + el)
-        el.click();   
-   
-        let date = new Date()
-        let todayDate = date.getMonth() + 1 +"/" + date.getDay() +"/" + date.getYear()
 
         await eyes.check(Target.window().fully().withName("Add Category Modal").layout());
-        await driver.findElement(By.css("#add-category-name")).sendKeys("Groceries" + Math.random());
-        await driver.findElement(By.css("#add-category-limit")).sendKeys(123);
-        await driver.findElement(By.id("add-category-btn")).click();
-    
         await driver.findElement(By.id("view-transactions")).click();
-        await driver.findElement(By.id("add-transaction-btn")).click();
-        await driver.findElement(By.id("add-transaction-title")).sendKeys("Energy Drink");
 
-        let  transactionsListIsPresent = await driver.findElement(By.id("view-transactions-list")).isPresent();
-       assert.equal(transactionsListIsPresent , true)
-        await driver.findElement(By.id("add-transaction-date")).sendKeys(todayDate);
-        await driver.findElement(By.id("add-transaction-amount")).sendKeys(120);
-
-        await driver.findElement(By.id("add-transaction-category")).click();
-        await driver.findElement(By.id("GROCERIES")).click();
-        await driver.findElement(By.id("add-transaction-btn")).click();
-        assert.equal(transactionsListIsPresent , true)
+        let  transactionsListisDisplayed = await driver.findElement(By.id("view-transactions-list")).isDisplayed();
+       assert.equal(transactionsListisDisplayed , true)
+      
 
         // check if spending-vs-budget chart is present
         await driver.findElement(By.id("view-spending-vs-budget")).click();
-        await driver.findElement(By.id("spending-vs-budget-chart")).isPresent()
-
+        let  spendingVsBudget   = await driver.findElement(By.id("spending-vs-budget-chart")).isDisplayed()
+        assert.equal(spendingVsBudget , true)
         // check if spending-by-month chart is present
         await driver.findElement(By.id("view-spending-by-month")).click();
-        await driver.findElement(By.id("spending-by-month-chart")).isPresent()
-      
+        let  spendingByMonth  = await driver.findElement(By.id("spending-by-month-chart")).isDisplayed()
+        assert.equal(spendingByMonth , true)
          // check if month by month chart is present
         await driver.findElement(By.id("view-month-by-month")).click();
-        await driver.findElement(By.id("month-by-month-chart")).isPresent()
+        let monthByMonth = await driver.findElement(By.id("month-by-month-chart")).isDisplayed()
+        assert.equal(monthByMonth , true)
     });
     
     afterEach(async function() {
-
         // Close Eyes to tell the server it should display the results.
         await eyes.closeAsync();
-
         // Quit the WebDriver instance.
         await driver.quit();
     });

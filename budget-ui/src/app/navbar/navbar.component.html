@@ -1,18 +1,18 @@
 
 
 
-<p-menubar [model]="[]">
+<p-menubar [model]="[]" role="menu">
   <ng-template pTemplate="start">
     <div class="p-menubar nav-settings">
-      <a class="navbar-brand" href="#">MyBudgetApp</a>
-      <a *ngIf="isLoggedIn" class="nav-link link-nav"  routerLink="/dashboard"><span>Dashboard</span></a>
+      <a class="navbar-brand" href="#" tabindex="-1" role="menuitem">MyBudgetApp</a>
+      <a *ngIf="isLoggedIn" class="nav-link link-nav"  routerLink="/dashboard" role="menuitem",><span>Dashboard</span></a>
     </div>
   </ng-template>
   <ng-template pTemplate="end">
     <div class="p-menubar nav-settings">
-      <a  *ngIf="!isLoggedIn" class="nav-link link-nav"  routerLink="/login"><span>Login</span></a>
-      <a  *ngIf="!isLoggedIn" class="nav-link link-nav"  routerLink="/signup"><span>Signup</span></a>
-      <a *ngIf="isLoggedIn" class="nav-link link-nav"  routerLink="/logout"><span>Logout</span></a>
+      <a  *ngIf="!isLoggedIn" class="nav-link link-nav"  routerLink="/login"  role="menuitem"><span>Login</span></a>
+      <a  *ngIf="!isLoggedIn" class="nav-link link-nav"  routerLink="/signup" role="menuitem"><span>Signup</span></a>
+      <a *ngIf="isLoggedIn" class="nav-link link-nav"  routerLink="/logout" role="menuitem"><span>Logout</span></a>
       </div>
   </ng-template>
 </p-menubar>

@@ -1,34 +1,37 @@
 
 <mat-card>
-  <mat-card-title>Login</mat-card-title>
+  <mat-card-title>
+    <h1>Login</h1></mat-card-title>
+  <div *ngIf="requestDone">
+    <p *ngIf="!isSuccess" class="error">
+      {{ message }}
+    </p>
+    <p *ngIf="isSuccess" class="success">
+      {{ message }}
+    </p>
+  </div>
+
 <mat-card-content>
 <form [formGroup]="form" (ngSubmit)="submit()">
 <p>
   <mat-form-field>
-    <input id="username" type="text" matInput placeholder="Username" formControlName="username" aria-required="true"
+    <input aria-label="username" id="username" type="text" matInput placeholder="Username" formControlName="username" aria-required="true"
     aria-invalid="false">
+    <mat-error *ngIf="username.invalid">{{getErrorMessage(username)}}</mat-error>
+
   </mat-form-field>
 </p>
 
 <p>
   <mat-form-field>
-    <input id="password" type="password" matInput placeholder="Password" formControlName="password" aria-required="true"
+    <input aria-label="password" id="password" type="password" matInput placeholder="Password" formControlName="password" aria-required="true"
     aria-invalid="false">
+    <mat-error *ngIf="password.invalid">{{getErrorMessage(password)}}</mat-error>
   </mat-form-field>
 </p>
 
-<div *ngIf="requestDone">
-  <p *ngIf="!isSuccess" class="error">
-    {{ message }}
-  </p>
-  <p *ngIf="isSuccess" class="success">
-    {{ message }}
-  </p>
-</div>
-
-
 <div class="button">
-  <button id="loginBtn" type="submit" mat-button>Login</button>
+  <button aria-label="loginButton" id="loginBtn" [disabled]="!form.valid"  type="submit" mat-button>Login</button>
 </div>
 
 </form>
