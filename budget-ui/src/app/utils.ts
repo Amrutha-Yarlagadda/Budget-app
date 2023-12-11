@@ -1,7 +1,6 @@
 
 export class Utils {
   static toDateString(date : Date, plus: number = 0) {
-    debugger
     var year = date.getUTCFullYear();
     var month = date.getUTCMonth() + 1;
     var day = date.getUTCDate() + plus;

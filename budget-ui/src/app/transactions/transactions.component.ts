@@ -39,7 +39,6 @@ export class TransactionsComponent implements OnInit {
     this.ref.onDestroy.subscribe((product: FormData) => {
       this.apiService.getTransactions("2023-01-01", Utils.toDateString(new Date(), 2))
         .subscribe((res: Transaction[]) => {
-          debugger
           this.transactions = res
         });
     });
