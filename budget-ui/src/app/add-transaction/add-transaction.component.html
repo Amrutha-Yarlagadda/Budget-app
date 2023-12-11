@@ -3,49 +3,42 @@
     <form [formGroup]="form" (ngSubmit)="submit()">
       <p>
         <mat-form-field>
-          <input id="add-transaction-title"  type="text" matInput placeholder="Title" formControlName="title">
+          <input aria-label="addTitle"   id="add-transaction-title"  type="text" matInput placeholder="Title" formControlName="title">
+          <mat-error *ngIf="title.invalid">{{getErrorMessage(title)}}</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field>
           <mat-label>Choose a date</mat-label>
-          <input id="add-transaction-date" matInput [matDatepicker]="picker" formControlName="date">
+          <input aria-label="addTransactionDate"  id="add-transaction-date" matInput [matDatepicker]="picker" formControlName="date">
           <mat-hint>MM/DD/YYYY</mat-hint>
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="date.invalid">{{getErrorMessage(date)}}</mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field>
-          <input  id="add-transaction-amount" type="number" matInput placeholder="Amount" formControlName="amount">
+          <input  aria-label="addTransactionDAmount"  id="add-transaction-amount" type="number" matInput placeholder="Amount" formControlName="amount">
+          <mat-error *ngIf="amount.invalid">{{getErrorMessage(amount)}}</mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field >
           <mat-label>Category</mat-label>
-          <mat-select id="add-transaction-category"  formControlName="category">
+          <mat-select   aria-label="addTransactionCategory"  id="add-transaction-category"  formControlName="category">
             <mat-option *ngFor="let category of categories" [value]="category.id" id="{{category.name}}">
               {{category.name}}
             </mat-option>
           </mat-select>
+          <mat-error *ngIf="category.invalid">{{getErrorMessage(category)}}</mat-error>
         </mat-form-field>
       </p>
 
       <div class="button">
-        <button id="add-transaction-btn" type="submit" mat-button>Save</button>
+        <button  aria-label="addTransactionBtn"   [disabled]="!form.valid" id="add-transaction-btn" type="submit" mat-button>Save</button>
       </div>
-
-
-      <div *ngIf="requestDone">
-        <p *ngIf="!isSuccess" class="error">
-          {{ message }}
-        </p>
-        <p *ngIf="isSuccess" class="success">
-          {{ message }}
-        </p>
-      </div>
-
     </form>
   </mat-card-content>
 </mat-card>

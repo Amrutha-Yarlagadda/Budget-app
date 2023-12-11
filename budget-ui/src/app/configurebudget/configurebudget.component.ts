@@ -22,8 +22,6 @@ export class ConfigureBudgetComponent implements OnInit {
     this.apiService.getCategories().subscribe(response =>
       this.categories = response
     )
-
-
   }
 
   onRowEditInit(category: Category) {
@@ -43,6 +41,12 @@ export class ConfigureBudgetComponent implements OnInit {
   addCategory() {
     this.ref = this.dialogService.open(AddCategoryComponent, { header: 'Add New Category' });
     this.ref.onClose.subscribe((product) => {
+      this.apiService.getCategories().subscribe(response =>
+        this.categories = response
+      )
+    });
+
+    this.ref.onDestroy.subscribe((product) => {
       this.apiService.getCategories().subscribe(response =>
         this.categories = response
       )

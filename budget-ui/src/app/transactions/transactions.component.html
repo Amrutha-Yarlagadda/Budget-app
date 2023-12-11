@@ -42,7 +42,7 @@
   </ng-template>
   <ng-template pTemplate="body" let-transaction>
       <tr>
-        <td>{{ transaction.createdDate |  date:'shortDate' }}</td>
+        <td>{{ getDate(transaction.createdDate)}}</td>
         <td>{{ transaction.title }}</td>
         <td>{{ transaction.categoryId }}</td>
         <td>{{ transaction.amount }}</td>

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ApiService } from '../api.service';
 import { Category, ServerResponse } from '../models';
 import { Utils } from '../utils';
@@ -14,13 +14,15 @@ export class AddCategoryComponent {
   public isSuccess = false
   public message = ""
   public requestDone = false
+  name = new FormControl('', [Validators.required]);
+  limit = new FormControl('', [Validators.required]);
   constructor(private apiService: ApiService,
      private dialogService: DialogService,
      private messageService: MessageService) {}
 
   form: FormGroup = new FormGroup({
-    name: new FormControl(''),
-    limit: new FormControl(''),
+    name: this.name,
+    limit: this.limit,
 })
 
 submit() {
@@ -46,6 +48,13 @@ submit() {
       this.requestDone = true
       this.message = error.error;
     })
+  }
+  getErrorMessage(valueToCheck: FormControl) {
+    if (valueToCheck.hasError('required')) {
+      return 'You must enter a value';
+    }
+
+    return valueToCheck.hasError('email') ? 'Not a valid email' : '';
   }
 
 }

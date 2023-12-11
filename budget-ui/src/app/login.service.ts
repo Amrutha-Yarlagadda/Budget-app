@@ -13,8 +13,7 @@ export class LoginService {
 
   private readonly  loggedInState = new BehaviorSubject<boolean>(this.isLoggedIn());
   private readonly  tokenState = new BehaviorSubject<string | null>(this.getToken());
-
-    public endpoint = "/api/login"
+  public endpoint = "/api/login"
   constructor(private http: HttpClient) {}
 
   login(req: LoginRequest): Observable<ServerResponse> {
