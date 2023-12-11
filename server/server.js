@@ -245,17 +245,17 @@ app.post('/api/transaction', jwtMW,(req, res) =>{
     const  amount = req.body.amount;
     const  createdDate = req.body.createdDate;
     const  categoryId = req.body.categoryId;
-    const  id= req.body.id;
 
     if (!title || !amount) {
         res.status(400).send("all fields are required")
         return
     }
-    connection.query('UPDATE budget_spending SET `title` = ?, `amount` = ?, `createdDate` = ?, `categoryId` = ?   WHERE id = ? AND userId = ?',[title, amount, createdDate, categoryId, id,  req.auth.id], function (error, results, fields) {
+    connection.query('Insert INTO budget_spending (title, amount, userId, createdDate, categoryId) VALUES ( ?, ?, ?, ? , ?)',[title, amount, req.auth.id, createdDate, categoryId], function (error, results, fields) {
+
         if (error)  {
             console.log("budget creation failed" + error.message)
             if (error.code == "ER_DUP_ENTRY") {
-                res.status(409).send("Transaction already exists")
+                res.status(409).send("Budget already exists")
             } else {
                 res.status(400).send("Something went wrong")
             }
