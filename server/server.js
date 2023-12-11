@@ -253,15 +253,15 @@ app.post('/api/transaction', jwtMW,(req, res) =>{
     connection.query('Insert INTO budget_spending (title, amount, userId, createdDate, categoryId) VALUES ( ?, ?, ?, ? , ?)',[title, amount, req.auth.id, createdDate, categoryId], function (error, results, fields) {
 
         if (error)  {
-            console.log("budget creation failed" + error.message)
+            console.log("Transaction creation failed" + error.message)
             if (error.code == "ER_DUP_ENTRY") {
-                res.status(409).send("Budget already exists")
+                res.status(409).send("Transaction already exists")
             } else {
                 res.status(400).send("Something went wrong")
             }
             
         } else  {
-            console.log("Budget is created")
+            console.log("Transaction is created")
             res.status(200).send({
                 success: true,
                 message : "Transaction successfully created"
