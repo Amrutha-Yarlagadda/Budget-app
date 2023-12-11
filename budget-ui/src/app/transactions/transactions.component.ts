@@ -16,7 +16,7 @@ export class TransactionsComponent {
   ref: DynamicDialogRef | undefined;
 
   constructor(private apiService: ApiService, private dialogService: DialogService) {
-    this.apiService.getTransactions("2023-01-01", Utils.toDateString(new Date()))
+    this.apiService.getTransactions("2023-01-01", Utils.toDateString(new Date(), 2))
     .subscribe((res: Transaction[])=> {
     this.transactions = res
     });
@@ -26,7 +26,7 @@ export class TransactionsComponent {
   addTransaction() {
     this.ref = this.dialogService.open(AddTransactionComponent, { header: 'Add New Transaction'});
     this.ref.onClose.subscribe((product: FormData) => {
-        this.apiService.getTransactions("2023-01-01", Utils.toDateString(new Date()))
+        this.apiService.getTransactions("2023-01-01", Utils.toDateString(new Date(), 2))
         .subscribe((res: Transaction[])=> {
         this.transactions = res
         });
